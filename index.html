@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12A35 - Chào Mừng Ngày Phụ Nữ Việt Nam 20/10</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==========================================
+         MÀN CHÀO MỪNG 20/10 (INTRO CURTAIN OVERLAY)
+         ========================================== -->
+    <div id="introCurtain" class="intro-curtain">
+        <div class="curtain-panel curtain-left"></div>
+        <div class="curtain-panel curtain-right"></div>
+        
+        <div class="curtain-content" id="curtainContent">
+            <div class="curtain-badge animate-pulse">
+                <span>✨ TẬP THỂ 12A35 KÍNH MỪNG 20/10 ✨</span>
+            </div>
+            <h1 class="curtain-title">
+                Chào Mừng Ngày Phụ Nữ Việt Nam
+            </h1>
+            <p class="curtain-subtitle">
+                Tập thể lớp 12A35 gửi trọn lòng tri ân & muôn đóa hoa tươi thắm kính dâng quý Cô và phái đẹp
+            </p>
+            <button class="curtain-btn" id="openCurtainBtn">
+                <i class="fa-solid fa-gift"></i>
+                <span>Chạm Để Mở Màn Chúc Mừng</span>
+                <i class="fa-solid fa-sparkles"></i>
+            </button>
+            <div class="curtain-hint">🎵 Âm nhạc và cánh hoa sẽ tự động mở ra 🌸</div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         OPENGL / WEBGL SHADER CANVAS & 2D CANVASES
+         ========================================== -->
+    <canvas id="webglCanvas"></canvas>
+    <canvas id="petalsCanvas"></canvas>
+    <canvas id="fireworksCanvas"></canvas>
+
+    <!-- ==========================================
+         2 BÊN VIỀN CÁNH HOA NHẸ NHÀNG (FLORAL BORDERS)
+         ========================================== -->
+    <div class="floral-border floral-border-left" aria-hidden="true">
+        <div class="floral-branch">
+            <div class="flower-node fn-1">🌸</div>
+            <div class="flower-node fn-2">🌺</div>
+            <div class="flower-node fn-3">💐</div>
+            <div class="flower-node fn-4">🌸</div>
+            <div class="flower-node fn-5">🌹</div>
+            <div class="flower-node fn-6">🌸</div>
+        </div>
+    </div>
+
+    <div class="floral-border floral-border-right" aria-hidden="true">
+        <div class="floral-branch">
+            <div class="flower-node fn-1">🌸</div>
+            <div class="flower-node fn-2">🌺</div>
+            <div class="flower-node fn-3">💐</div>
+            <div class="flower-node fn-4">🌸</div>
+            <div class="flower-node fn-5">🌹</div>
+            <div class="flower-node fn-6">🌸</div>
+        </div>
+    </div>
+
+    <!-- Background Soft Pink Glow Orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+
+    <!-- Floating Music Player Button -->
+    <div class="music-player" id="musicPlayerBtn" title="Bật/Tắt Nhạc Nền">
+        <div class="disc" id="musicDisc">
+            <i class="fa-solid fa-music"></i>
+        </div>
+        <div class="sound-wave" id="soundWave">
+            <span></span><span></span><span></span><span></span>
+        </div>
+        <span class="music-tooltip">Người Gieo Mầm Xanh 🎵</span>
+    </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="wrapper">
+
+        <!-- ==========================================
+             TOP HEADER BAR: 12A35 VỚI 2 LOGO (THEO ẢNH 2)
+             ========================================== -->
+        <div class="top-nav-wrapper">
+            <div class="container">
+                <header class="class-header-bar">
+                    <!-- Top row: Logo 1 (Left) - Badge 12A35 (Center) - Logo 2 (Right) -->
+                    <div class="header-main-row">
+                        <!-- Logo Left: Trung tâm GDNN - GDTX -->
+                        <div class="header-logo logo-left-box" title="Trung tâm GDNN - GDTX Quận 12">
+                            <img src="images/logo_trungtam.png" alt="Logo Trung tâm GDNN - GDTX" class="nav-logo-img">
+                        </div>
+
+                        <!-- Center Class Badge: 12A35 -->
+                        <div class="class-badge-container">
+                            <div class="class-badge-box">
+                                <span class="class-name">12A35</span>
+                            </div>
+                        </div>
+
+                        <!-- Logo Right: Đoàn Thanh Niên -->
+                        <div class="header-logo logo-right-box" title="Đoàn TNCS Hồ Chí Minh">
+                            <img src="images/logo_doan.png" alt="Logo Đoàn TNCS Hồ Chí Minh" class="nav-logo-img">
+                        </div>
+                    </div>
+
+                    <!-- Subtitles Under 12A35 -->
+                    <div class="header-subtitle-box">
+                        <p class="header-slogan">Tôn vinh vẻ đẹp, lòng nhân hậu và bản lĩnh của người phụ nữ Việt Nam</p>
+                        <p class="header-author">Thực hiện bởi Q.Hoàng lớp 12A35 – Trung tâm GDNN-GDTX Quận 12</p>
+                    </div>
+
+                    <!-- Bottom row: Swipeable Navigation Pills -->
+                    <nav class="nav-pills-container" id="navPillsScroll" aria-label="Điều hướng trang">
+                        <div class="nav-pills-track">
+                            <a href="#heroSection" class="nav-pill active">Giới thiệu</a>
+                            <a href="#meaningSection" class="nav-pill">Ý nghĩa</a>
+                            <a href="#gallerySection" class="nav-pill">Bộ Ảnh Phụ Nữ</a>
+                            <a href="#feature1" class="nav-pill">Dáng Áo Dài</a>
+                            <a href="#poemsSection" class="nav-pill">Chùm Thơ</a>
+                            <a href="#wishesSection" class="nav-pill">Lời Chúc</a>
+                            <a href="#emotionsSection" class="nav-pill">Cảm xúc Q.Hoàng</a>
+                            <a href="#envelopeSection" class="nav-pill">Mở Thiệp</a>
+                            <a href="#finaleSection" class="nav-pill">Tri Ân</a>
+                            <a href="#footerSection" class="nav-pill">Lời kết</a>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+        </div>
+
+        <!-- HERO SECTION -->
+        <section class="hero-section" id="heroSection">
+            <div class="hero-badge animate-pop">
+                <span class="sparkle-icon">🌸</span>
+                <span>CHÀO MỪNG NGÀY PHỤ NỮ VIỆT NAM 20/10</span>
+                <span class="sparkle-icon">🌸</span>
+            </div>
+            
+            <h1 class="hero-title gradient-text">
+                Tôn Vinh Vẻ Đẹp & Tâm Hồn Phụ Nữ
+            </h1>
+
+            <p class="hero-subtitle">
+                Tập thể lớp 12A35 xin gửi trọn tình yêu thương, lòng biết ơn kính trọng sâu sắc và muôn vạn lời chúc tốt đẹp nhất tới các Cô, các Chị và toàn thể phái đẹp
+            </p>
+
+            <div class="floating-hearts-container">
+                <div class="pulse-heart"><i class="fa-solid fa-heart"></i></div>
+            </div>
+
+            <div class="scroll-down-btn" id="scrollDownBtn">
+                <span>Khám phá chùm thơ & lời chúc</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- SECTION: Ý NGHĨA 20/10 (MEANING SECTION) -->
+        <section class="section meaning-section" id="meaningSection">
+            <div class="container">
+                <div class="meaning-card">
+                    <div class="meaning-icon">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <span class="badge-tag">Ý Nghĩa Ngày Phụ Nữ Việt Nam</span>
+                    <h2 class="section-title">Nét Đẹp Bất Diệt Của Phụ Nữ Việt Nam</h2>
+                    <p class="meaning-text">
+                        Ngày 20/10 là dịp thiêng liêng để tôn vinh sự kiên cường, đảm đang, nhân hậu và tài năng của người phụ nữ Việt Nam. 
+                        Đặc biệt với tập thể lớp 12A35, đây là cơ hội quý báu để bày tỏ tấm lòng tri ân sâu sắc nhất tới quý Cô giáo – những người mẹ hiền thứ hai đã luôn tận tâm dìu dắt chúng em trên con đường chinh phục tri thức và hoàn thiện nhân cách.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: BỘ SƯU TẬP 4 KHOẢNH KHẮC TÔN VINH PHỤ NỮ -->
+        <section class="section gallery-section" id="gallerySection">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="badge-tag">Bộ Sưu Tập Khoảnh Khắc</span>
+                    <h2 class="section-title">Bốn Nét Đẹp Rạng Ngời Của Người Phụ Nữ</h2>
+                    <p class="section-desc">Những hình ảnh chân thực, tràn ngập nét duyên dáng, tình đồng nghiệp và tinh thần nhiệt huyết của các Cô giáo trường</p>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="gallery-grid">
+                    <!-- Photo 1: Nụ Cười & Bước Chân Lạc Quan -->
+                    <div class="gallery-card">
+                        <div class="gallery-img-wrapper" data-img="images/co_giao_buoc_di.jpg" data-title="Bước Chân Lạc Quan & Nụ Cười Nắng Thu" data-caption="Khoảnh khắc 4 cô giáo dạo bước đầy niềm vui và sự lạc quan. Nụ cười rạng rỡ và ánh mắt hướng về tương lai là biểu tượng của tinh thần yêu đời, yêu nghề.">
+                            <img src="images/co_giao_buoc_di.jpg" alt="Các cô giáo dạo bước tươi vui" class="gallery-img">
+                            <div class="gallery-badge"><i class="fa-solid fa-sun"></i> Nụ Cười Nắng Thu</div>
+                            <div class="gallery-zoom-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấn Phóng To</div>
+                        </div>
+                        <div class="gallery-content">
+                            <h3 class="gallery-card-title">1. Bước Chân Lạc Quan & Rạng Rỡ</h3>
+                            <p class="gallery-card-desc">
+                                Nụ cười rạng ngời và ánh mắt đầy niềm vui khi các cô giáo cùng nhau dạo bước dưới nắng vàng mùa thu. Đó là nét đẹp của sự tươi trẻ, lòng yêu đời và sự bình dị đầy cuốn hút của người phụ nữ.
+                            </p>
+                            <div class="gallery-tags">
+                                <span>#NuCuoiPhuNu</span>
+                                <span>#TuoiTreYeuDoi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo 2: Tình Đồng Nghiệp & Gắn Kết Yêu Thương -->
+                    <div class="gallery-card">
+                        <div class="gallery-img-wrapper" data-img="images/co_giao_nam_tay.jpg" data-title="Tay Trong Tay - Gắn Kết Đồng Lòng" data-caption="8 cô giáo trong tà áo dài vàng hoa cúc nắm chặt tay nhau, thể hiện tinh thần đoàn kết keo sơn và tấm lòng nhiệt huyết vì mái trường và học trò.">
+                            <img src="images/co_giao_nam_tay.jpg" alt="Các cô giáo nắm tay nhau gắn kết" class="gallery-img">
+                            <div class="gallery-badge"><i class="fa-solid fa-handshake-simple"></i> Gắn Kết Yêu Thương</div>
+                            <div class="gallery-zoom-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấn Phóng To</div>
+                        </div>
+                        <div class="gallery-content">
+                            <h3 class="gallery-card-title">2. Tay Trong Tay - Tình Đồng Nghiệp</h3>
+                            <p class="gallery-card-desc">
+                                Những bàn tay nắm chặt bàn tay thể hiện sự gắn bó, đồng lòng của tập thể các cô. Cùng chung một mái trường, chung một sứ mệnh dìu dắt đàn em, tạo nên sức mạnh của tình đồng nghiệp ấm áp.
+                            </p>
+                            <div class="gallery-tags">
+                                <span>#TinhDongNghiep</span>
+                                <span>#DoanKetYeuThuong</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo 3: Muôn Sắc Áo Dài Dưới Tán Cây Xanh -->
+                    <div class="gallery-card">
+                        <div class="gallery-img-wrapper" data-img="images/co_giao_da_sac.jpg" data-title="Muôn Sắc Duyên Dáng Dưới Tán Cây Xanh" data-caption="Tà áo dài truyền thống với muôn màu sắc thướt tha – trắng thanh cao, hồng sen thắm thiết, xanh biếc hy vọng, đỏ nồng nàn – tôn vinh vẻ đẹp đằm thắm của người phụ nữ Việt Nam.">
+                            <img src="images/co_giao_da_sac.jpg" alt="Các cô giáo áo dài đa sắc dưới bóng cây" class="gallery-img">
+                            <div class="gallery-badge"><i class="fa-solid fa-palette"></i> Muôn Sắc Duyên Dáng</div>
+                            <div class="gallery-zoom-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấn Phóng To</div>
+                        </div>
+                        <div class="gallery-content">
+                            <h3 class="gallery-card-title">3. Muôn Sắc Áo Dài Dưới Tán Cây</h3>
+                            <p class="gallery-card-desc">
+                                Dưới tán lá xanh rợp bóng, muôn sắc áo dài truyền thống thướt tha tung bay: sắc trắng tinh khôi, hồng đằm thắm, xanh hy vọng, đỏ nhiệt huyết – như vườn hoa ngát hương giữa cuộc đời.
+                            </p>
+                            <div class="gallery-tags">
+                                <span>#AoDaiVietNam</span>
+                                <span>#DuyenDangThietTha</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photo 4: Bản Lĩnh, Tri Thức & Tự Tin -->
+                    <div class="gallery-card">
+                        <div class="gallery-img-wrapper" data-img="images/co_giao_toan_canh.jpg" data-title="Rạng Ngời Bản Lĩnh & Tri Thức Dưới Mái Trường" data-caption="Toàn cảnh tập thể cô giáo với phong thái tự tin, thanh lịch và giàu tri thức, khẳng định vị thế và tài năng cao quý của người phụ nữ Việt Nam trong thời đại mới.">
+                            <img src="images/co_giao_toan_canh.jpg" alt="Tập thể cô giáo toàn cảnh mái trường" class="gallery-img">
+                            <div class="gallery-badge"><i class="fa-solid fa-award"></i> Tri Thức & Bản Lĩnh</div>
+                            <div class="gallery-zoom-overlay"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấn Phóng To</div>
+                        </div>
+                        <div class="gallery-content">
+                            <h3 class="gallery-card-title">4. Bản Lĩnh & Tri Thức Mái Trường</h3>
+                            <p class="gallery-card-desc">
+                                Đứng trước khuôn viên nhà trường hiện đại, tập thể các cô toát lên vẻ đẹp kiêu hãnh và bản lĩnh. Hình mẫu người phụ nữ Việt Nam: Giỏi việc nước, đảm việc nhà, tâm huyết với sự nghiệp giáo dục.
+                            </p>
+                            <div class="gallery-tags">
+                                <span>#BanLinhPhuNu</span>
+                                <span>#TriThucVietNam</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: PHOTO FEATURE - ÁO DÀI (IMAGE 1) & THƠ VĂN HAY -->
+        <section class="section photo-feature-section" id="feature1">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="badge-tag">Nét Đẹp Duyên Dáng</span>
+                    <h2 class="section-title">Dáng Áo Dài Rạng Rỡ</h2>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="card-grid-feature">
+                    <!-- Image Card 1 -->
+                    <div class="photo-card-wrapper">
+                        <div class="photo-frame">
+                            <div class="frame-decor decor-tl"></div>
+                            <div class="frame-decor decor-tr"></div>
+                            <div class="frame-decor decor-bl"></div>
+                            <div class="frame-decor decor-br"></div>
+                            
+                            <img src="images/giao_vien_ao_dai.jpg" alt="Tập thể cô giáo trong trang phục Áo dài vàng" class="feature-img">
+                            <div class="img-overlay"></div>
+                            
+                            <div class="photo-badge">
+                                <i class="fa-solid fa-rose"></i> 20/10 Thắm Thiết
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Poem & Praise Card -->
+                    <div class="text-content-box">
+                        <div class="quote-card">
+                            <i class="fa-solid fa-quote-left quote-icon"></i>
+                            <h3 class="quote-heading">Vẻ Đẹp Tri Thức & Dịu Dàng</h3>
+                            <div class="poem-text">
+                                "Tà áo dài bay trong nắng thu,<br>
+                                Nụ cười rạng rỡ tỏa hương đưa.<br>
+                                Người gieo nét chữ, tình thương ấm,<br>
+                                Nét đẹp dịu dàng vượt thời gian."
+                            </div>
+                            <p class="quote-sub">
+                                Lớp 12A35 chúng em xin gửi lời tri ân chân thành nhất tới sự tận tụy, hy sinh thầm lặng và nụ cười rạng rỡ của các Cô giáo – những người luôn lan tỏa hơi ấm tri thức cho bao thế hệ học trò!
+                            </p>
+                            <div class="decor-ribbon">
+                                <i class="fa-solid fa-heart"></i> 12A35 Trân Trọng & Tự Hào <i class="fa-solid fa-heart"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: CHÙM THƠ HAY CHÚC MỪNG 20/10 -->
+        <section class="section poems-collection-section" id="poemsSection">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="badge-tag">Tuyển Tập Thơ Văn</span>
+                    <h2 class="section-title">Chùm Thơ 12A35 Kính Dâng Các Cô & Các Chị</h2>
+                    <p class="section-desc">Những vần thơ đong đầy tình cảm chân thành em xin kính dâng phái đẹp</p>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="poems-grid">
+                    <!-- Poem Card 1 -->
+                    <div class="poem-card">
+                        <div class="poem-header">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                            <h3>Nụ Cười Mùa Xuân</h3>
+                        </div>
+                        <div class="poem-body">
+                            "Em chúc các Cô ngát sắc hương,<br>
+                            Mỗi ngày trôi qua đong đầy thương.<br>
+                            Nụ cười rạng rỡ như hoa nở,<br>
+                            Nét đẹp dịu dàng tỏa muôn phương."
+                        </div>
+                        <div class="poem-footer">
+                            <span>✨ Em Chúc Mãi Tươi Trẻ & Hạnh Phúc ✨</span>
+                        </div>
+                    </div>
+
+                    <!-- Poem Card 2 -->
+                    <div class="poem-card">
+                        <div class="poem-header">
+                            <i class="fa-solid fa-heart"></i>
+                            <h3>Tri Ân Người Phụ Nữ</h3>
+                        </div>
+                        <div class="poem-body">
+                            "Yêu thương trao trọn những ngày qua,<br>
+                            Bàn tay chăm sóc giữ mái nhà.<br>
+                            Tài năng, đảm đang và nhân ái,<br>
+                            Phái đẹp Việt Nam tuyệt vời sao!"
+                        </div>
+                        <div class="poem-footer">
+                            <span>💐 Em Kính Chúc Ngát Hương Tâm Hồn 💐</span>
+                        </div>
+                    </div>
+
+                    <!-- Poem Card 3 -->
+                    <div class="poem-card">
+                        <div class="poem-header">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <h3>Tình Cô Bao La</h3>
+                        </div>
+                        <div class="poem-body">
+                            "Bao năm miệt mài bên bục giảng,<br>
+                            Dìu dắt đàn em bước trưởng thành.<br>
+                            Tâm huyết, yêu thương cùng tri thức,<br>
+                            Em gửi ngàn lời chúc trọn xanh."
+                        </div>
+                        <div class="poem-footer">
+                            <span>📖 Em Chúc Cô Luôn Thành Công 📖</span>
+                        </div>
+                    </div>
+
+                    <!-- Poem Card 4 -->
+                    <div class="poem-card">
+                        <div class="poem-header">
+                            <i class="fa-solid fa-sun"></i>
+                            <h3>Nắng Thu 20/10</h3>
+                        </div>
+                        <div class="poem-body">
+                            "Hôm nay hai mươi tháng mười về,<br>
+                            Nắng vàng trải lối ấm tràn mề.<br>
+                            Em chúc phái đẹp luôn xinh đẹp,<br>
+                            Vạn sự bình an, vạn niềm vui."
+                        </div>
+                        <div class="poem-footer">
+                            <span>🌸 Em Chúc An Yên & May Mắn 🌸</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: WISHES CARDS GRID -->
+        <section class="section wishes-section" id="wishesSection">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="badge-tag">Gửi Trao Yêu Thương</span>
+                    <h2 class="section-title">Những Lời Lễ Phép Em Kính Chúc</h2>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="wishes-grid">
+                    <!-- Wish Card 1 -->
+                    <div class="wish-card">
+                        <div class="wish-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <h3>Sức Khỏe & Tươi Trẻ</h3>
+                        <p>Em xin kính chúc quý Cô, các Chị và toàn thể chị em luôn có một sức khỏe dồi dào, tinh thần luôn tươi trẻ, tràn đầy năng lượng tích cực và giữ mãi nụ cười rạng rỡ nhất.</p>
+                    </div>
+
+                    <!-- Wish Card 2 -->
+                    <div class="wish-card">
+                        <div class="wish-icon"><i class="fa-solid fa-heart-circle-bolt"></i></div>
+                        <h3>Hạnh Phúc Trọn Vẹn</h3>
+                        <p>Em chúc cho mọi khoảnh khắc trong cuộc sống của phái đẹp luôn ngập tràn tình yêu thương, nhận được sự trân trọng và đong đầy tình cảm ấm áp từ gia đình.</p>
+                    </div>
+
+                    <!-- Wish Card 3 -->
+                    <div class="wish-card">
+                        <div class="wish-icon"><i class="fa-solid fa-trophy"></i></div>
+                        <h3>Thành Công & Vững Vàng</h3>
+                        <p>Em chúc các Cô và các Chị luôn tự tin tỏa sáng, gặt hái được thật nhiều thành tựu rực rỡ trong công việc cũng như sự nghiệp trồng người cao quý.</p>
+                    </div>
+
+                    <!-- Wish Card 4 -->
+                    <div class="wish-card">
+                        <div class="wish-icon"><i class="fa-solid fa-gift"></i></div>
+                        <h3>Vạn Sự Như Ý</h3>
+                        <p>Em mong rằng mọi ước nguyện và dự định của các Cô, các Chị sẽ sớm thành hiện thực, cuộc sống luôn nhẹ nhàng, bình an và ngập tràn may mắn.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: TRI ÂN VÀ CẢM XÚC TỪ Q.HOÀNG -->
+        <section class="section emotions-section" id="emotionsSection">
+            <div class="container">
+                <div class="emotions-card">
+                    <div class="emotions-header text-center">
+                        <div class="author-avatar-badge">
+                            <i class="fa-solid fa-feather-pointed"></i>
+                        </div>
+                        <span class="badge-tag">Góc Tâm Tình 12A35</span>
+                        <h2 class="section-title">Tri Ân & Cảm Xúc Từ Q.Hoàng</h2>
+                        <div class="title-line"></div>
+                    </div>
+
+                    <div class="emotions-quote-box">
+                        <i class="fa-solid fa-quote-left emotions-quote-icon"></i>
+                        <p class="emotions-main-quote">
+                            "Em gửi lời cảm ơn sâu sắc đến mẹ, cô giáo và các bạn nữ – những người đã tô đẹp cuộc sống. Ngày 20/10 không chỉ là ngày tri ấn, mà còn là dịp để mỗi người nhắc nhớ giá trị yêu thương và tôn trọng."
+                        </p>
+                        <div class="emotions-signature">
+                            <span class="author-sign-name">— Q.Hoàng (Lớp 12A35) —</span>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Photo Viewing Actions (Nhấn để xem ảnh trường & giáo viên) -->
+                    <div class="photo-view-actions text-center">
+                        <p class="photo-view-prompt">🌸 <strong>Nhấn để xem ảnh kỷ niệm phóng to:</strong></p>
+                        <div class="photo-btn-group">
+                            <button class="btn-view-photo" data-img="images/giao_vien_ao_dai.jpg" data-title="Tập Thể Quý Cô Giáo Áo Dài Vàng" data-caption="Nét đẹp duyên dáng, dịu dàng và rạng ngời tri thức của các Cô giáo – Ngày 20/10">
+                                <i class="fa-solid fa-images"></i> Xem Ảnh Các Cô Giáo Áo Dài
+                            </button>
+                            <button class="btn-view-photo" data-img="images/tap_the_truong.jpg" data-title="Tập Thể Trung Tâm GDNN - GDTX Quận 12" data-caption="Lễ Khai Giảng & Kỷ Niệm Năm Học Mới Cùng Ngày Phụ Nữ Việt Nam 20/10">
+                                <i class="fa-solid fa-school-flag"></i> Xem Ảnh Tập Thể Nhà Trường
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: INTERACTIVE ENVELOPE / THƯ BÍ MẬT -->
+        <section class="section envelope-section" id="envelopeSection">
+            <div class="container text-center">
+                <div class="section-header">
+                    <span class="badge-tag">Món Quà Bất Ngờ</span>
+                    <h2 class="section-title">Mở Thiệp Bí Mật 20/10</h2>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="envelope-wrapper" id="envelopeWrapper">
+                    <div class="envelope">
+                        <div class="envelope-back"></div>
+                        <div class="letter" id="letter">
+                            <div class="letter-stamp"><i class="fa-solid fa-award"></i></div>
+                            <h3 class="letter-title">Thư Tri Ân Phụ Nữ 20/10</h3>
+                            <p class="letter-body">
+                                Nhân ngày 20/10, tập thể lớp 12A35 xin gửi lời tri ân chân thành nhất tới những cống hiến, hy sinh và vẻ đẹp tuyệt vời của phái đẹp. Kính chúc quý Cô và các chị em mãi mãi hạnh phúc & rạng rỡ!
+                            </p>
+                            <div class="letter-signature">❤️ Tập Thể 12A35 Kính Chúc ❤️</div>
+                        </div>
+                        <div class="envelope-top"></div>
+                        <div class="envelope-front"></div>
+                        <div class="envelope-heart" id="envelopeHeart">
+                            <i class="fa-solid fa-heart"></i>
+                            <span>Mở Thiệp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: GRAND FINALE - IMAGE 2 & LỜI CHÚC TẬP THỂ (ĐOẠN KẾT) -->
+        <section class="section finale-section" id="finaleSection">
+            <div class="container">
+                <div class="finale-box">
+                    <div class="section-header text-center">
+                        <div class="celebration-badge">
+                            <i class="fa-solid fa-crown"></i> ĐOẠN KẾT TRI ÂN <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <h2 class="section-title finale-title">Kính Chúc Tập Thể Nhà Trường</h2>
+                        <p class="finale-sub">Lễ Khai Giảng & Kỷ niệm Ngày Phụ Nữ Việt Nam 20/10</p>
+                        <div class="title-line"></div>
+                    </div>
+
+                    <!-- Main Grand Image Frame (Image 2) -->
+                    <div class="grand-photo-container">
+                        <div class="grand-photo-frame">
+                            <img src="images/tap_the_truong.jpg" alt="Tập thể Trung tâm GDNN - GDTX Quận 12 Lễ Khai Giảng" class="grand-img">
+                            <div class="banner-caption">
+                                <i class="fa-solid fa-school"></i> TRUNG TÂM GIÁO DỤC NGHỀ NGHIỆP - GIÁO DỤC THƯỜNG XUYÊN QUẬN 12
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heartfelt Wishes Block -->
+                    <div class="finale-wishes-card">
+                        <div class="sparkle-stars">
+                            <span>🌸</span><span>🌺</span><span>🌸</span>
+                        </div>
+
+                        <h3 class="wishes-heading">
+                            Lời Chúc Trân Trọng & Kính Cẩn Nhất
+                        </h3>
+
+                        <div class="wishes-content-typed" id="typedWishes">
+                            Tập thể học sinh lớp 12A35 xin kính chúc Ban Giám Hiệu, quý Cô giáo, quý Chị Em cán bộ công nhân viên cùng toàn thể phái đẹp luôn dồi dào sức khỏe, niềm vui đong đầy, giữ vững nhiệt huyết với sự nghiệp giáo dục cao quý và gặt hái được vô vàn thành công rực rỡ trong Năm học mới 2026 - 2027!
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" id="fireworksBtn">
+                                <i class="fa-solid fa-fireworks"></i> Bắn Pháo Hoa Chúc Mừng
+                            </button>
+                            <button class="btn btn-secondary" id="heartsBurstBtn">
+                                <i class="fa-solid fa-heart"></i> Thả Tim Yêu Thương
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER WITH REQUESTED COPYRIGHT & CREATOR CREDITS -->
+        <footer class="footer" id="footerSection">
+            <div class="container text-center">
+                <p class="footer-wish-text">
+                    🌸 Tập thể 12A35 kính chúc ngày Phụ nữ Việt Nam 20/10 ngập tràn nụ cười & hạnh phúc! 🌸
+                </p>
+
+                <!-- Dedicated Copyright & Creator Box -->
+                <div class="official-copyright-container">
+                    <p class="copyright-main-line">
+                        © 2026 Q.Hoàng lớp 12A35 – Trung tâm GDNN-GDTX Quận 12
+                    </p>
+                    
+                    <div class="creator-signature-block">
+                        <span class="creator-label">Thiết kế & thực hiện bởi</span>
+                        <a href="https://www.facebook.com/profile.php?id=61595184145827" target="_blank" rel="noopener noreferrer" class="creator-name-link" title="Ghé thăm Facebook Quang Hoàng">
+                            <i class="fa-brands fa-facebook"></i> Quang Hoàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Main Audio: Người Gieo Mầm Xanh -->
+    <audio id="bgAudio" loop preload="auto">
+        <source src="audio/nguoi_gieo_mam_xanh.mp4" type="audio/mp4">
+    </audio>
+
+    <!-- INTERACTIVE IMAGE LIGHTBOX MODAL (XEM ẢNH TRƯỜNG & GIÁO VIÊN PHÓNG TO) -->
+    <div id="imageModal" class="image-modal" aria-hidden="true">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-wrapper">
+            <button class="modal-close-btn" id="modalCloseBtn" title="Đóng ảnh">&times;</button>
+            <div class="modal-content">
+                <div class="modal-img-container">
+                    <img id="modalImage" src="" alt="Ảnh phóng to" class="modal-img">
+                </div>
+                <div class="modal-info-box">
+                    <h3 id="modalTitle" class="modal-title"></h3>
+                    <p id="modalCaption" class="modal-caption"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
